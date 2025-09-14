@@ -88,11 +88,13 @@ jobs:
           java-version: 8
           distribution: zulu
 
-      - name: Patch Encodings.properties to UTF-8
+      - name: Patch Encodings.properties to UTF-8 (macOS safe)
         run: |
           iconv -f ISO-8859-1 -t UTF-8 \
           jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties \
-          -o jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties
+          > jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties.utf8
+          mv jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties.utf8 \
+          jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties
 
       - name: Build with CI build script
         run: |
