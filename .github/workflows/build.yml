@@ -21,6 +21,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set locale to UTF-8
         run: |
@@ -76,6 +78,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          submodules: recursive
 
       - name: Set locale to UTF-8
         run: |
@@ -90,11 +94,14 @@ jobs:
 
       - name: Patch Encodings.properties to UTF-8 (macOS safe)
         run: |
-          iconv -f ISO-8859-1 -t UTF-8 \
-          jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties \
-          > jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties.utf8
-          mv jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties.utf8 \
-          jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties
+          FILE=jaxp/src/com/sun/org/apache/xml/internal/serializer/Encodings.properties
+          if [ -f "$FILE" ]; then
+            iconv -f ISO-8859-1 -t UTF-8 "$FILE" > "${FILE}.utf8"
+            mv "${FILE}.utf8" "$FILE"
+            echo "Patched $FILE to UTF-8"
+          else
+            echo "File $FILE không tồn tại, bỏ qua patch"
+          fi
 
       - name: Build with CI build script
         run: |
