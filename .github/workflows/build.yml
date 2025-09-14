@@ -2,10 +2,15 @@ name: Build OpenJDK 8 for Android
 
 on:
   push:
+    paths:
+      - 'build.txt'
   pull_request:
+    paths:
+      - 'build.txt'
   workflow_dispatch:
   schedule:
     - cron: '0 0 1 */2 *'
+
 
 jobs:
   build_android:
